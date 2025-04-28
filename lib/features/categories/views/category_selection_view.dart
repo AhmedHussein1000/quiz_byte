@@ -6,8 +6,6 @@ class CategorySelectionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-       
-        body:  CategorySelectionViewBody());
+    return Scaffold(body: CategorySelectionViewBody());
   }
 }

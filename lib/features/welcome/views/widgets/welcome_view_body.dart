@@ -44,7 +44,7 @@ class _WelcomeViewBodyState extends State<WelcomeViewBody> {
                     flex: 2,
                   ),
                   Text(
-                    'Let\'s play Quiz,',
+                    'Let\'s start a Quiz,',
                     style: Styles.style32Bold(context: context),
                   ),
                   const Text(

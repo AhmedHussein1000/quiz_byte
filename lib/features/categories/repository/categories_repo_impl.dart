@@ -21,19 +21,17 @@ class CategoriesRepoImpl extends BaseCategoriesRepo {
           .getData(endpoint: ApiConstants.categoriesEndPoint, queryParameters: {
         ApiConstants.apiKeyQueryParameter: ApiConstants.apiKey,
       });
-      List<dynamic>? jsonCategries = response.data;
+      List<dynamic>? jsonCategories = response.data;
 
       List<CategoryModel> categories = [];
-      if (!jsonCategries.isNullOrEmpty()) {
-        for (var category in jsonCategries!) {
+      if (!jsonCategories.isNullOrEmpty()) {
+        for (var category in jsonCategories!) {
           categories.add(CategoryModel.fromJson(category));
         }
+         return Right(categories);
       }
-      if (!categories.isNullOrEmpty()) {
-        return Right(categories);
-      } else {
         return const Left(ServerFailure('No Categories Found'));
-      }
+      
     } on DioException catch (e) {
       return Left(ServerFailure.fromDioError(e));
     } catch (e) {

@@ -13,6 +13,10 @@ class QuestionsPageviewLoading extends StatelessWidget {
     final questionController = Get.find<QuestionsController>();
     return Skeletonizer(
       enabled: true,
+      effect: ShimmerEffect(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+      ),
       child: PageView.builder(
         itemCount: dummyQuestions.length,
         physics: const NeverScrollableScrollPhysics(),

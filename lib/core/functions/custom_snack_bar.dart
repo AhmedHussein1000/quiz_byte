@@ -13,7 +13,7 @@ customSnackBar({
         style: const TextStyle(color: Colors.white),
       ),
       backgroundColor: Colors.black26,
-      duration: duration ?? const Duration(seconds: 3),
+      duration: duration ?? const Duration(seconds: 5),
     ),
   );
 }

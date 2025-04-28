@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quiz_app/core/helpers/extensions.dart';
 import 'package:quiz_app/core/themes/app_colors.dart';
 import 'package:quiz_app/core/themes/styles.dart';
 import 'package:quiz_app/features/quiz/controllers/questions_controller.dart';
@@ -46,11 +47,13 @@ class QuestionCard extends StatelessWidget {
             ),
             GetBuilder<QuestionsController>(
                 builder: (controller) => controller.isAnswered
-                    ? Text(
-                        'Explanation:${questionModel.explanation ?? ''}',
-                        style: Styles.style16Medium(context: context)
-                            .copyWith(color: kBlackColor),
-                      )
+                    ? !questionModel.explanation.isNullOrEmpty()
+                        ? Text(
+                            'Explanation:${questionModel.explanation}',
+                            style: Styles.style16Medium(context: context)
+                                .copyWith(color: kBlackColor),
+                          )
+                        : const SizedBox.shrink()
                     : const SizedBox.shrink()),
           ],
         ),

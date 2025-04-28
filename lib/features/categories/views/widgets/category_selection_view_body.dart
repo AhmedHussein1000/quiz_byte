@@ -24,10 +24,19 @@ class CategorySelectionViewBody extends StatefulWidget {
 class _CategorySelectionViewBodyState extends State<CategorySelectionViewBody> {
   final CategoriesController categoriesController =
       Get.put(CategoriesController(getIt()));
-  String? selectedCategory;
-  String? selectedDifficulty;
+      
+  final ValueNotifier<String?> selectedCategoryNotifier = ValueNotifier<String?>(null);
+  final ValueNotifier<String?> selectedDifficultyNotifier = ValueNotifier<String?>(null);
 
   final List<String> difficulties = ["easy", "medium", "hard"];
+  
+  @override
+  void dispose() {
+    selectedCategoryNotifier.dispose();
+    selectedDifficultyNotifier.dispose();
+    super.dispose();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -62,68 +71,84 @@ class _CategorySelectionViewBodyState extends State<CategorySelectionViewBody> {
                       child: Text(categoriesController.errorText.value),
                     );
                   } else {
-                    return DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        labelText: "Choose Category",
-                        labelStyle: const TextStyle(color: kLightGreenColor),
-                        border:
-                            _customOutlineBorder(borderColor: Colors.white24),
-                        focusedBorder:
-                            _customOutlineBorder(borderColor: kLightGreenColor),
-                      ),
-                      value: selectedCategory,
-                      items: categoriesController.categories.map((category) {
-                        return DropdownMenuItem<String>(
-                          value: category.name,
-                          child: Text(category.name ?? 'Uncategorize'),
+                    return ValueListenableBuilder<String?>(
+                      valueListenable: selectedCategoryNotifier,
+                      builder: (context, selectedCategory, _) {
+                        return DropdownButtonFormField<String>(
+                          decoration: InputDecoration(
+                            labelText: "Choose Category",
+                            labelStyle: const TextStyle(color: kLightGreenColor),
+                            border:
+                                _customOutlineBorder(borderColor: Colors.white24),
+                            focusedBorder:
+                                _customOutlineBorder(borderColor: kLightGreenColor),
+                          ),
+                          value: selectedCategory,
+                          items: categoriesController.categories.map((category) {
+                            return DropdownMenuItem<String>(
+                              value: category.name,
+                              child: Text(category.name ?? 'Uncategorize'),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            selectedCategoryNotifier.value = value;
+                          },
                         );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          selectedCategory = value;
-                        });
-                      },
+                      }
                     );
                   }
                 }),
                 const SizedBox(height: 20),
-                DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    labelText: "Choose Difficulty Level",
-                    labelStyle: const TextStyle(color: kLightGreenColor),
-                    border: _customOutlineBorder(borderColor: Colors.white24),
-                    focusedBorder:
-                        _customOutlineBorder(borderColor: kLightGreenColor),
-                  ),
-                  value: selectedDifficulty,
-                  items: difficulties.map((difficulty) {
-                    return DropdownMenuItem<String>(
-                      value: difficulty,
-                      child: Text(difficulty),
+                ValueListenableBuilder<String?>(
+                  valueListenable: selectedDifficultyNotifier,
+                  builder: (context, selectedDifficulty, _) {
+                    return DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        labelText: "Choose Difficulty Level",
+                        labelStyle: const TextStyle(color: kLightGreenColor),
+                        border: _customOutlineBorder(borderColor: Colors.white24),
+                        focusedBorder:
+                            _customOutlineBorder(borderColor: kLightGreenColor),
+                      ),
+                      value: selectedDifficulty,
+                      items: difficulties.map((difficulty) {
+                        return DropdownMenuItem<String>(
+                          value: difficulty,
+                          child: Text(difficulty),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        selectedDifficultyNotifier.value = value;
+                      },
                     );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      selectedDifficulty = value;
-                    });
-                  },
+                  }
                 ),
                 const SizedBox(height: 40),
-                StartButton(
-                  onTap: () {
-                    if (selectedCategory == null ||
-                        selectedDifficulty == null) {
-                      customSnackBar(
-                          context: context,
-                          content: 'Please choose category and level');
-                    } else {
-                      context.pushReplacementNamed(Routes.quiz, arguments: {
-                        'category': selectedCategory,
-                        'difficulty': selectedDifficulty,
-                      });
-                    }
-                  },
-                  btnText: 'Start the Quiz',
+                ValueListenableBuilder<String?>(
+                  valueListenable: selectedCategoryNotifier,
+                  builder: (context, selectedCategory, _) {
+                    return ValueListenableBuilder<String?>(
+                      valueListenable: selectedDifficultyNotifier,
+                      builder: (context, selectedDifficulty, _) {
+                        return StartButton(
+                          onTap: () {
+                            if (selectedCategory == null ||
+                                selectedDifficulty == null) {
+                              customSnackBar(
+                                  context: context,
+                                  content: 'Please choose category and level');
+                            } else {
+                              context.pushReplacementNamed(Routes.quiz, arguments: {
+                                'category': selectedCategory,
+                                'difficulty': selectedDifficulty,
+                              });
+                            }
+                          },
+                          btnText: 'Start the Quiz',
+                        );
+                      }
+                    );
+                  }
                 ),
               ],
             ),

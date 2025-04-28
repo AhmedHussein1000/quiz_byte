@@ -18,14 +18,12 @@ class _QuizViewState extends State<QuizView> {
       Get.find<QuestionsController>();
   @override
   void initState() {
-    
     questionsController.getQuestions(
         category: widget.category, difficulty: widget.difficulty);
     // بيتاكد ان الكود مش هيتنفذ الا لما الويدجت يتعملها بيلد
     WidgetsBinding.instance.addPostFrameCallback((_) {
       customSnackBar(
-        context: context,
-        content: 'You have 10 seconds between each question.');
+          context: context, content: 'You have 5 seconds between questions to see the answer and explanation.');
       questionsController.animationController
           .forward()
           .whenComplete(() => questionsController.nextQuestion());

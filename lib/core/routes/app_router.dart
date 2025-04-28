@@ -20,24 +20,22 @@ class AppRouter {
           builder: (_) => const CategorySelectionView(),
         );
       case Routes.quiz:
-        String? category;
-        String? difficulty;
         if (arguments is Map<String, dynamic>) {
-          category = arguments['category'];
-          difficulty = arguments['difficulty'];
+          String category = arguments['category'];
+          String difficulty = arguments['difficulty'];
+          return MaterialPageRoute(
+            builder: (_) => QuizView(
+              category: category,
+              difficulty: difficulty,
+            ),
+          );
         }
         return MaterialPageRoute(
-          builder: (_) => QuizView(
-            category: category!,
-            difficulty: difficulty!,
-          ),
+          builder: (_) => const NoRouteDefinedScreen(),
         );
       case Routes.score:
-      
         return MaterialPageRoute(
-          builder: (_) => ScoreView(
-           
-          ),
+          builder: (_) => const ScoreView(),
         );
       default:
         return MaterialPageRoute(

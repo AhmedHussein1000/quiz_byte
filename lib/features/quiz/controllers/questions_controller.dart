@@ -7,6 +7,7 @@ import 'package:quiz_app/features/quiz/repository/base_questions_repo.dart';
 class QuestionsController extends GetxController
     with GetSingleTickerProviderStateMixin {
   final BaseQuestionsRepo baseQuestionsRepo;
+  QuestionsController(this.baseQuestionsRepo);
   late final AnimationController animationController;
   late final Animation<double> animation;
   late final PageController pageController;
@@ -17,11 +18,11 @@ class QuestionsController extends GetxController
   bool isAnswered = false;
   var selectedAnswer = ''.obs;
   var questionNumber = 1.obs;
-  
+
   @override
   void onInit() {
-    animationController = AnimationController(
-        vsync: this, duration: const Duration(seconds: 120));
+    animationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 60));
     animation = Tween<double>(begin: 0, end: 1).animate(animationController)
       ..addListener(
         () => update(),
@@ -51,8 +52,6 @@ class QuestionsController extends GetxController
     update();
   }
 
-  QuestionsController(this.baseQuestionsRepo);
-
   void getQuestions(
       {required String category, required String difficulty}) async {
     try {
@@ -75,7 +74,7 @@ class QuestionsController extends GetxController
     }
     animationController.stop();
     update();
-    await Future.delayed(const Duration(seconds: 10));
+    await Future.delayed(const Duration(seconds: 5));
     nextQuestion();
   }
 
